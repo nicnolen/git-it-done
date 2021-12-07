@@ -17,6 +17,8 @@
     <p>Search for a GitHub user or click on a language to see a list of repositories and how many open issues they have!
     </p>
   </header>
+
+
   <main class="flex-row justify-space-between">
     <!-- Create a form (left column) -->
     <div class="col-12 col-md-4">
@@ -27,6 +29,15 @@
           <input name="username" id="username" type="text" autofocus="true" class="form-input" />
           <button type="submit" class="btn">Get User</button>
         </form> 
+      </div>
+
+      <div class="card">
+        <h3 class="card-header text-uppercase">Search By Topic</h3>
+        <div id="language-buttons" class="card-body">
+          <button data-language="javascript" class="btn">JavaScript</button>
+          <button data-language="css" class="btn">CSS</button>
+          <button data-language="html" class="btn">HTML</button>
+        </div>
       </div>
     </div>
 

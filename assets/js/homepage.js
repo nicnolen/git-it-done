@@ -7,8 +7,41 @@ var nameInputEl = document.querySelector("#username");
 var repoContainerEl = document.querySelector("#repos-container");
 // reference to the span element where the search term will be written
 var repoSearchTerm = document.querySelector("#repo-search-term");
+// reference to the language buttons
+var languageButtonsEl = document.querySelector("#language-buttons");
 
 // FUNCTIONS
+// Function to handle form submissions
+var formSubmitHandler = function(event) {
+  // prevent the browser from performing the default action the event wants it to do. (In this case, prevent the browser from submitting a form to a URL)
+  event.preventDefault();
+
+  // get value from input element
+  var username = nameInputEl.value.trim();
+
+  if (username) {
+    getUserRepos(username);
+    // clear the form
+    nameInputEl.value = "";
+  } else {
+    alert("Please enter a Github username");
+  } 
+};
+
+// Button click handler function
+var buttonClickHandler = function(event) {
+  //get the language attribute from the clicked element
+  var language = event.target.getAttribute("data-language");
+  
+  // call the `getFeaturedRepos` function and pass the value we just retrieved from data-language as the argument
+  if (language) {
+    getFeaturedRepos(language);
+
+    // clear old content
+    repoContainerEl.textContent = "";
+  }
+};
+
 // Search for GitHub users and list all their repositories
 var getUserRepos = function(user) {
   // format the github api url
@@ -32,21 +65,22 @@ var getUserRepos = function(user) {
   });
 };
 
-// Function to handle form submissions
-var formSubmitHandler = function(event) {
-  // prevent the browser from performing the default action the event wants it to do. (In this case, prevent the browser from submitting a form to a URL)
-  event.preventDefault();
+// Get featured repositories
+var getFeaturedRepos = function(language) {
+  // format the github api url
+  var apiUrl = "https://api.github.com/search/repositories?q=" + language + "+is:featured&sort=help-wanted-issues";
 
-  // get value from input element
-  var username = nameInputEl.value.trim();
-
-  if (username) {
-    getUserRepos(username);
-    // clear the form
-    nameInputEl.value = "";
-  } else {
-    alert("Please enter a Github username");
-  } 
+  // make a get request to url
+  fetch(apiUrl).then(function(response) {
+    // request was successful
+    if (response.ok) {
+      response.json().then(function(data) {
+        displayRepos(data.items, language);
+      });
+    } else {
+      alert('Error: GitHub User Not Found');
+    }
+  });
 };
 
 // Display repositories
@@ -100,3 +134,6 @@ var displayRepos = function(repos, searchTerm) { // repos is the array of repo d
 // EVENT LISTENERS
 // Submit event listener
 userFormEl.addEventListener("submit", formSubmitHandler);
+
+// Language button event listener
+languageButtonsEl.addEventListener("click", buttonClickHandler);
