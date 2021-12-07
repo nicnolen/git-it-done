@@ -3,8 +3,21 @@
 var issueContainerEl = document.querySelector("#issues-container");
 // Reference limit warning container
 var limitWarningEl = document.querySelector("#limit-warning");
+// Reference repo name
+var repoNameEl = document.querySelector("#repo-name");
 
 // FUNCTIONS
+// Extract the query value from the query string in the api call function `getRepoIssues`
+var getRepoName = function() {
+    // assign query string to a variable
+    var queryString = document.location.search;
+
+    // break strings into substrings
+    var repoName = queryString.split("=")[1];
+    getRepoIssues(repoName);
+    repoNameEl.textContent = repoName;
+}
+
 // Create an HTTP request
 var getRepoIssues = function(repo) {
     // variable to hold the query
@@ -22,6 +35,7 @@ var getRepoIssues = function(repo) {
                 if (response.headers.get("Link")) {
                     displayWarning(repo);
                 }
+                getRepoName();
             });
         } else {
             alert("There was a problem with your request!");
@@ -86,4 +100,5 @@ var displayIssues = function(issues) {
       limitWarningEl.appendChild(linkEl);
   };
 
-getRepoIssues("facebook/react");
+  getRepoName()
+
